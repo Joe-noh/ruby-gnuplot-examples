@@ -12,7 +12,8 @@ mmt = Hash.new
 
 csv = CSV.open(dat)
 months = csv.shift[1..-1]
-130.times{csv.shift} # 
+130.times{ csv.shift } # Discard olds
+
 csv.each do |row|
   year = row[0]
   mmt[year] = GSL::Vector.alloc(12)
@@ -24,7 +25,7 @@ end
 Gnuplot.open do |gp|
   Gnuplot::Plot.new(gp) do |plot|
     plot.term   "postscript 12 color"
-    plot.output "#{dir}/line01.eps"
+    plot.output "#{dir}/graph/line01.eps"
     plot.ylabel "Mean Temperature [deg C]"
     plot.key    "top right"
     plot.xtics "(#{months.map{|m| "'#{m}'"}.zip((0..11).to_a).map{|m| m.join ' '}.join ','})"
