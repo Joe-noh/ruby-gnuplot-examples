@@ -16,10 +16,8 @@ months = csv.shift[1..-1]
 
 csv.each do |row|
   year = row[0]
-  mmt[year] = GSL::Vector.alloc(12)
-  (1..12).each do |month|
-    mmt[year][month-1] = row[month].to_f
-  end
+  mmt[year] = Array.new
+  12.times{|i| mmt[year][i] = row[i+1].to_f }
 end
 
 Gnuplot.open do |gp|
@@ -31,7 +29,7 @@ Gnuplot.open do |gp|
     plot.xtics "(#{months.map{|m| "'#{m}'"}.zip((0..11).to_a).map{|m| m.join ' '}.join ','})"
 
     mmt.each do |year, vector|
-      plot.data << Gnuplot::DataSet.new(vector.to_a) do |ds|
+      plot.data << Gnuplot::DataSet.new(vector) do |ds|
         ds.with = "linespoints"
         ds.linewidth = 3
         ds.title = year
